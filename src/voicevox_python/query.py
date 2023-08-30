@@ -1,5 +1,5 @@
 from voicevox_python.model import AudioQuery
-from typing import Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Union
 from requests import Response, Session
 
 
@@ -10,7 +10,11 @@ class Client:
         self.session = Session()
 
     def post(
-        self, path: str, *, params: Optional[Dict[str, Any]] = None, json: Optional[Dict[str, Any]] = None
+        self,
+        path: str,
+        *,
+        params: Optional[Dict[str, Any]] = None,
+        json: Optional[Union[Dict[str, Any], List[Dict[str, Any]]]] = None,
     ) -> Response:
         try:
             return self.session.post(self.url + path, params=params, json=json, timeout=self.timeout)
@@ -42,3 +46,17 @@ class Client:
             return response.content
         else:
             raise ValueError(f"failed to synthesis: {response.text}")
+
+    def multi_synthesis(self, queries: List[AudioQuery], speaker: int, core_version: Optional[str] = None) -> bytes:
+        """
+        複数のクエリを同時に合成し,zip圧縮したバイナリを返す
+        """
+        response = self.post(
+            "/multi_synthesis",
+            params={"speaker": speaker, "core_version": core_version},
+            json=[q.model_dump() for q in queries],
+        )
+        if response.status_code == 200:
+            return response.content
+        else:
+            raise ValueError(f"failed to multi synthesis: {response.text}")
