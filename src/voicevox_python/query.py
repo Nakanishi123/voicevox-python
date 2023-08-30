@@ -21,12 +21,22 @@ class Client:
         except:
             raise ValueError("failed to connect to VoiceVox Server")
 
-    def create_audio_query(self, text: str, speaker: int) -> AudioQuery:
+    def audio_query(self, text: str, speaker: int) -> AudioQuery:
         response = self.post("/audio_query", params={"text": text, "speaker": speaker})
         if response.status_code == 200:
             return AudioQuery(**response.json())
         else:
             raise ValueError(f"failed to create audio query: {response.text}")
+
+    def audio_query_from_preset(self, text: str, preset_id: int, core_version: Optional[str] = None) -> AudioQuery:
+        response = self.post(
+            "/audio_query_from_preset",
+            params={"text": text, "preset_id": preset_id, "core_version": core_version},
+        )
+        if response.status_code == 200:
+            return AudioQuery(**response.json())
+        else:
+            raise ValueError(f"failed to create audio query from preset: {response.text}")
 
     def synthesis(
         self,
