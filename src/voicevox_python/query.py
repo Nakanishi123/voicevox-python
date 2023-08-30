@@ -1,6 +1,6 @@
 from voicevox_python.model import AudioQuery
-from typing import Optional
-from requests import Session
+from typing import Optional, Dict, Any
+from requests import Response, Session
 
 
 class Client:
@@ -9,11 +9,16 @@ class Client:
         self.timeout = timeout
         self.session = Session()
 
-    def create_audio_query(self, text: str, speaker: int) -> AudioQuery:
-        response = self.session.post(
-            self.url + "/audio_query", params={"text": text, "speaker": speaker}, timeout=self.timeout
-        )
+    def post(
+        self, path: str, *, params: Optional[Dict[str, Any]] = None, json: Optional[Dict[str, Any]] = None
+    ) -> Response:
+        try:
+            return self.session.post(self.url + path, params=params, json=json, timeout=self.timeout)
+        except:
+            raise ValueError("failed to connect to VoiceVox Server")
 
+    def create_audio_query(self, text: str, speaker: int) -> AudioQuery:
+        response = self.post("/audio_query", params={"text": text, "speaker": speaker})
         if response.status_code == 200:
             return AudioQuery(**response.json())
         else:
@@ -31,9 +36,7 @@ class Client:
             "enable_interrogative_upspeak": enable_interrogative_upspeak,
             "core_version": core_version,
         }
-        response = self.session.post(
-            self.url + "/synthesis", params=params, json=query.model_dump(), timeout=self.timeout
-        )
+        response = self.post("/synthesis", params=params, json=query.model_dump())
 
         if response.status_code == 200:
             return response.content
