@@ -10,6 +10,9 @@ dependencies = ["pydantic>=2", "requests>=2"]
 readme = "README.md"
 requires-python = ">= 3.8"
 
+[project.urls]
+"Homepage" = "https://github.com/Nakanishi123/voicevox-python"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
@@ -28,6 +31,8 @@ dev-dependencies = [
     "pytest>=7.4.0",
     "pyright>=1.1.324",
     "hatchling>=1.18.0",
+    "build>=0.10.0",
+    "twine>=4.0.2",
 ]
 
 [tool.hatch.metadata]
