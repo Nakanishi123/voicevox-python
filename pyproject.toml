@@ -26,7 +26,7 @@ line-length = 120
 
 [tool.pyright]
 pythonVersion = "3.8"
-typeCheckingMode = "basic"
+typeCheckingMode = "strict"
 
 [tool.rye]
 managed = true
