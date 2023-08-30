@@ -7,7 +7,7 @@ on:
         types: [closed]
 
 jobs:
-    build:
+    deploy:
         permissions:
             contents: write
         runs-on: ubuntu-latest
