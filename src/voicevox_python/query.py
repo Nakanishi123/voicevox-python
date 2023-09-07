@@ -4,10 +4,12 @@ from requests import Response, Session
 
 
 class Client:
-    def __init__(self, url: str = "http://localhost:50021", timeout: Optional[float] = None) -> None:
+    def __init__(
+        self, url: str = "http://localhost:50021", timeout: Optional[float] = None, session: Optional[Session] = None
+    ) -> None:
         self.url = url
         self.timeout = timeout
-        self.session = Session()
+        self.session = session or Session()
 
     def post(
         self,

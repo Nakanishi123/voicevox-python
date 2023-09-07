@@ -1,4 +1,5 @@
 from voicevox_python import Client, AudioQuery
+from requests import Session
 
 
 def test_audio_query():
@@ -25,3 +26,12 @@ def test_multi_synthesis():
     query = client.audio_query("こんにちは", 0)
     audio = client.multi_synthesis([query], 0)
     assert isinstance(audio, bytes)
+
+
+def test_session():
+    session = Session()
+    client1 = Client(session=session)
+    client1.audio_query("こんにちは", 0)
+
+    client2 = Client(session=session)
+    client2.audio_query("こんにちは", 0)
